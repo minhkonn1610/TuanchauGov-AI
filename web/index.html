@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="vi">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#eef3f1" />
+  <title>TuanchauGov AI</title>
+  <link rel="stylesheet" href="/static/styles.css?v=20261020-evidence-5" />
+</head>
+
+<body>
+  <div class="app-frame">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="TuanchauGov AI">
+        <span class="brand-mark">TC</span>
+        <span class="brand-copy">
+          <span class="brand-eyebrow">DOCUMENT QA WORKSPACE</span>
+          <span class="brand-name">TuanchauGov AI</span>
+        </span>
+      </a>
+
+      <div class="topbar-actions">
+        <span class="system-status"><span class="status-dot"></span>RAG modes ready</span>
+        <button id="history-toggle" class="icon-button topbar-icon-button" type="button"
+          aria-label="Mở lịch sử hội thoại" title="Lịch sử hội thoại" aria-expanded="false">
+          <span aria-hidden="true">☰</span>
+        </button>
+      </div>
+    </header>
+
+    <main id="workspace" class="workspace">
+      <aside class="panel source-panel" aria-labelledby="source-title">
+        <div class="panel-header source-header">
+          <div>
+            <span class="panel-eyebrow">NGUỒN ĐẦU VÀO</span>
+            <h1 id="source-title">Tài liệu</h1>
+          </div>
+          <span id="source-count" class="count-badge">0</span>
+        </div>
+
+        <div class="source-content">
+          <form id="upload-form" class="upload-section">
+            <label id="dropzone" class="dropzone" for="pdf-file">
+              <span class="dropzone-icon" aria-hidden="true">+</span>
+              <span class="dropzone-title">Chọn hoặc kéo PDF vào đây</span>
+              <span class="dropzone-meta">Một hoặc nhiều tệp · tối đa tùy cấu hình server</span>
+              <input id="pdf-file" name="files" type="file" accept="application/pdf" multiple />
+            </label>
+
+            <div class="list-heading">
+              <span>Tệp đã chọn</span>
+              <span id="file-count" class="subtle-count">0</span>
+            </div>
+            <div id="file-list" class="file-list" aria-live="polite"></div>
+
+            <button id="upload-submit" class="button button-primary upload-submit" type="submit" disabled>
+              <span class="button-icon" aria-hidden="true">↑</span>
+              Nạp tài liệu
+            </button>
+            <div id="upload-status" class="inline-status" aria-live="polite"></div>
+          </form>
+
+          <section class="document-library" aria-labelledby="document-library-title">
+            <div class="list-heading document-library-heading">
+              <span id="document-library-title">Tài liệu trong DB</span>
+              <button id="refresh-documents" class="tiny-button" type="button">Làm mới</button>
+            </div>
+            <input id="document-search" class="document-search" type="search" placeholder="Tìm tài liệu đã nạp..."
+              aria-label="Tìm tài liệu trong DB" autocomplete="off" />
+            <div id="document-list" class="stored-doc-list" aria-live="polite"></div>
+            <div id="document-status" class="inline-status" aria-live="polite"></div>
+          </section>
+        </div>
+
+        <div class="source-footer">
+          <span class="footer-label">Phạm vi hiện tại</span>
+          <strong id="source-scope">Chưa có tài liệu</strong>
+        </div>
+      </aside>
+
+      <section class="panel chat-panel" aria-labelledby="chat-title">
+        <div class="panel-header chat-header">
+          <div>
+            <span class="panel-eyebrow">HỎI ĐÁP</span>
+            <h2 id="chat-title">Cuộc trò chuyện</h2>
+          </div>
+          <span id="chat-state" class="header-state">Sẵn sàng</span>
+        </div>
+
+        <div id="messages" class="messages" aria-live="polite">
+          <div class="empty-state">
+            <span class="empty-mark">TB</span>
+            <h3>Hỏi về tài liệu của bạn</h3>
+            <p>Nạp PDF ở cột bên trái, sau đó đặt câu hỏi để bắt đầu.</p>
+            <div class="suggestions" aria-label="Câu hỏi gợi ý">
+              <button class="suggestion" type="button" data-query="Tóm tắt nội dung chính của tài liệu.">Tóm tắt tài
+                liệu</button>
+              <button class="suggestion" type="button" data-query="Các điểm quan trọng cần lưu ý là gì?">Điểm quan
+                trọng</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="composer-area">
+          <div id="active-documents" class="active-documents" aria-live="polite"></div>
+          <form id="chat-form" class="composer">
+            <button id="attach-button" class="icon-button" type="button" aria-label="Thêm tài liệu"
+              title="Thêm tài liệu">
+              <span aria-hidden="true">+</span>
+            </button>
+            <textarea id="query" rows="1" placeholder="Đặt câu hỏi về tài liệu..." aria-label="Câu hỏi"></textarea>
+            <div class="mode-selector">
+              <button class="mode-trigger" type="button" aria-haspopup="listbox" aria-expanded="false">
+                <span class="mode-label">Fast</span>
+                <span class="mode-caret" aria-hidden="true">▾</span>
+              </button>
+              <ul class="mode-dropdown" role="listbox" aria-label="Chế độ tìm kiếm" hidden>
+                <li class="mode-option is-selected" role="option" data-mode="fast">Fast</li>
+                <li class="mode-option" role="option" data-mode="balanced">Balanced</li>
+                <li class="mode-option" role="option" data-mode="deep">Deep</li>
+              </ul>
+            </div>
+            <button id="send-button" class="send-button" type="submit">
+              Gửi <span aria-hidden="true">→</span>
+            </button>
+          </form>
+          <div class="composer-note">Phạm vi trả lời theo tài liệu đang chọn.</div>
+        </div>
+        <input id="composer-files" type="file" accept="application/pdf" multiple hidden />
+      </section>
+
+      <aside id="history-panel" class="panel history-panel" aria-labelledby="history-title" hidden>
+        <div class="panel-header history-header">
+          <div>
+            <span class="panel-eyebrow">LỊCH SỬ</span>
+            <h2 id="history-title">Hội thoại</h2>
+          </div>
+        </div>
+
+        <div class="history-content">
+          <button id="new-chat" class="history-new-chat" type="button">
+            <span class="history-new-icon" aria-hidden="true">+</span>
+            <span>Đoạn chat mới</span>
+          </button>
+
+          <div class="history-section-title">Gần đây</div>
+          <div id="conversation-list" class="conversation-list" aria-live="polite"></div>
+          <button id="conversation-expand" class="tiny-button conversation-expand" type="button" hidden>Mở rộng
+            ↓</button>
+          <div id="conversation-status" class="inline-status" aria-live="polite"></div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <dialog id="conversation-dialog" class="conversation-dialog">
+    <form id="conversation-dialog-form" class="conversation-dialog-card" method="dialog">
+      <h2 id="conversation-dialog-title">Đặt tên đoạn chat</h2>
+      <input id="conversation-title-input" class="conversation-title-input" type="text" autocomplete="off"
+        maxlength="120" placeholder="TB sessionID" />
+      <div class="conversation-dialog-actions">
+        <button class="button button-secondary" type="submit" value="cancel">Hủy</button>
+        <button class="button button-primary dialog-confirm" type="submit" value="confirm">OK</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="/static/app.js?v=20261020-evidence-5"></script>
+</body>
+
+</html>

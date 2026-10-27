@@ -1,0 +1,36 @@
+services:
+  neo4j:
+    image: neo4j:5-community
+    container_name: chat-with-tb-neo4j
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    environment:
+      NEO4J_AUTH: "${NEO4J_AUTH:?Set NEO4J_AUTH before running Docker Compose}"
+      NEO4J_server_memory_heap_initial__size: 512m
+      NEO4J_server_memory_heap_max__size: 1G
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+  redis:
+    image: redis:7-alpine
+    container_name: chat-with-tb-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+  redis-insight:
+    image: redis/redisinsight:latest
+    container_name: chat-with-tb-redis-insight
+    depends_on:
+      - redis
+    ports:
+      - "5540:5540"
+    volumes:
+      - redisinsight_data:/data
+
+volumes:
+  neo4j_data:
+  neo4j_logs:
+  redis_data:
+  redisinsight_data:

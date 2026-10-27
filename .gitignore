@@ -1,0 +1,61 @@
+# Local agent/editor state
+.agents/
+.codex/
+.claude
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+.venv-ocr/
+venv/
+.env
+.env.*
+!.env.example
+
+# OCR scripts: keep only approved project scripts visible to Git
+/scripts/*
+!/scripts/requirements-ocr.txt
+!/scripts/Setup-ChatWithTB-HeaderOCR-Env.ps1
+!/scripts/Start-ChatWithTB-HeaderOCR.ps1
+!/scripts/Test-ChatWithTB-HeaderOCR.ps1
+!/scripts/test_header_ocr_sample.py
+
+# Test/build/cache output
+tests/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# Model and app caches
+.cache/
+models_cache/
+*.db
+
+# Generated data
+data/raw/pdf/*
+!data/raw/pdf/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+data/eval/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Other files
+AGENTS.md
+plan-rag.md
+report-rag.txt
+
+# Local Python backup and recovery snapshots
+/.venv_py310_backup/
+/_backups/

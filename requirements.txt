@@ -1,0 +1,15 @@
+markitdown[pdf]==0.1.6
+python-dotenv==1.2.2
+transformers==5.13.0
+langchain-experimental==0.4.2
+langchain-text-splitters==1.1.2
+sentence_transformers==5.6.0
+sentencepiece==0.2.2
+neo4j==6.2.0
+litellm==1.91.0
+headroom-ai==0.34.0
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+python-multipart>=0.0.9
+redis>=5.0.0
+PyMuPDF>=1.24,<2.0

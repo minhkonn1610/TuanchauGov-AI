@@ -1,0 +1,5 @@
+# Versions match the Chairman OCR environment already tested with the sample PDF.
+# Keep this file separate from ChatWithTBv2 requirements.txt.
+paddlepaddle==3.2.2
+paddleocr==3.7.0
+paddlex==3.7.2
